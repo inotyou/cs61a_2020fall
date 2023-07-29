@@ -15,7 +15,7 @@ def lambda_curry2(func):
     3
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return lambda a: lambda b: func(a, b)
 
 
 
@@ -47,6 +47,15 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    def func(n):
+        count = 0
+        for i in range(1, n+1):
+            if condition(n, i):
+                print("DEBUG:",i,n%i,condition)
+                count += 1
+        return count
+            
+    return func
 
 
 
@@ -82,6 +91,7 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    return lambda x: compose1(f, g)(x) == compose1(g, f)(x)
 
 
 
@@ -112,4 +122,51 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    def func_count(n):
+        def func(x):
+            i = 0
+            while i < n:
+                if i % 3 == 0:
+                    x = f1(x)
+                elif i % 3 == 1:
+                    x = f2(x)
+                else:
+                    x = f3(x)
+                i += 1
+            return x
+        return func
+    return func_count
+def print_n(n):
+    """
+    >>> f = print_n(2)
+    >>> f = f("hi")
+    hi
+    >>> f = f("hello")
+    hello
+    >>> f = f("bye")
+    done
+    >>> g = print_n(1)
+    >>> g("first")("second")("third")
+    first
+    done
+    done
+    <function inner_print>
+    """
+    def inner_print(x):
+        if n <= 0:
+            print("done")
+        else:
+            print(x)
+        return print_n(n-1)
+    return inner_print
+
+
+def make_func_repeater(f, x):
+    def repeat(n):
+        if n > 0:
+            return make_func_repeater(f, f(x))(n-1)
+        else:
+            return x
+    return repeat
+
 
