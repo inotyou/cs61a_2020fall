@@ -10,7 +10,13 @@ def couple(s, t):
     >>> couple(c, d)
     [['c', 's'], [6, '1']]
     """
-    assert len(s) == len(t)
+    assert len(s) == len(t), 'Error!'
+    answer = []
+    for i in range(len(s)) :
+        answer.append([s[i], t[i]])
+    return answer
+        
+    
     "*** YOUR CODE HERE ***"
 
 
@@ -27,6 +33,9 @@ def distance(city_a, city_b):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    lon_a, lon_b = get_lon(city_a), get_lon(city_b)
+    lat_a, lat_b = get_lat(city_a), get_lat(city_b)
+    return sqrt((lon_a-lon_b)**2 + (lat_a-lat_b)**2)
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -44,6 +53,9 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    new_city = make_city('new_city', lat, lon)
+    return get_name(city_a) if distance(new_city, city_a) < distance(new_city, city_b) else get_name(city_b)
+
 
 def check_city_abstraction():
     """
@@ -143,6 +155,12 @@ def berry_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
+    if label(t) == 'berry':
+        return True
+    for branch in branches(t):
+        if berry_finder(branch):
+            return True
+    return False
 
 
 def sprout_leaves(t, leaves):
@@ -179,6 +197,15 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
+    new_branches = []
+    if is_leaf(t):
+        for leaf in leaves:
+            # print(tree(leaf))
+            new_branches.append(tree(leaf))
+        return tree(label(t), new_branches)
+    for branch in branches(t):
+        new_branches.append(sprout_leaves(branch, leaves))
+    return tree(label(t), new_branches)
 
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
@@ -354,6 +381,7 @@ def random_sent():
 
 def tree(label, branches=[]):
     """Construct a tree with the given label value and a list of branches."""
+    print("DEBUG:",label, branches)
     if change_abstraction.changed:
         for branch in branches:
             assert is_tree(branch), 'branches must be trees'
